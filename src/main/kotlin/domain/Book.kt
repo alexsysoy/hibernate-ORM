@@ -4,9 +4,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "book")
-class Book (@Id
-            @GeneratedValue
-            var id: Long = 0,
+class Book (
             var title: String,
             var numberOfPage: Int = 0,
             var cost: Int = -1,
@@ -27,7 +25,7 @@ class Book (@Id
                 inverseJoinColumns = [JoinColumn(name = "genre_id")]
             )
             var genres: MutableSet<Genre> = mutableSetOf()
-) {
+): BaseEntity<Long>() {
 
     fun addAuthor(author: Author): Book {
         author.book = this
