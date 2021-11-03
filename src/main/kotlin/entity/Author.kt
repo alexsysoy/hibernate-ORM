@@ -1,4 +1,4 @@
-package domain
+package entity
 
 import javax.persistence.*
 
@@ -7,6 +7,6 @@ import javax.persistence.*
 class Author(
     var firstName: String,
     var lastName: String,
-    @ManyToOne
-    var book: Book? = null
+    @ManyToMany(mappedBy = "authors", cascade = [CascadeType.ALL])
+    var books: MutableList<Book> = mutableListOf()
 ): BaseEntity<Long>()

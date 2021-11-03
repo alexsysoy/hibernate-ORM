@@ -1,4 +1,4 @@
-package domain
+package entity
 
 import javax.persistence.*
 
@@ -9,27 +9,19 @@ class Book (
             var numberOfPage: Int = 0,
             var cost: Int = -1,
 
-            @OneToMany(
+            @OneToOne(
                 fetch = FetchType.LAZY,
                 cascade = [CascadeType.ALL],
-                mappedBy = "book"
             )
-            var authors: MutableList<Author> = mutableListOf(),
+            var genre: Genre? = null,
 
             @ManyToMany(
                 cascade = [CascadeType.ALL],
                 fetch = FetchType.LAZY
             )
-            @JoinTable(name = "book_genre",
+            @JoinTable(name = "book_author",
                 joinColumns = [JoinColumn(name = "book_id")],
-                inverseJoinColumns = [JoinColumn(name = "genre_id")]
+                inverseJoinColumns = [JoinColumn(name = "author_id")]
             )
-            var genres: MutableSet<Genre> = mutableSetOf()
-): BaseEntity<Long>() {
-
-    fun addAuthor(author: Author): Book {
-        author.book = this
-        this.authors.add(author)
-        return this
-    }
-}
+            var authors: MutableList<Author> = mutableListOf()
+): BaseEntity<Long>()

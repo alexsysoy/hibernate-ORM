@@ -1,16 +1,44 @@
 package dao
 
-import domain.Book
+import entity.Book
+import org.hibernate.HibernateException
 import org.hibernate.SessionFactory
 
 class BookDAO (private val sessionFactory: SessionFactory) {
 
     fun save(book: Book) {
-        sessionFactory.openSession().use { session ->
-            session.beginTransaction()
+        try {
+            sessionFactory.openSession().use { session ->
+                session.beginTransaction()
+                session.save(book)
+                session.transaction.commit()
+            }
+        } catch (e: HibernateException) {
+            println("Ошибка сохранения")
+        }
+    }
 
-            session.save(book)
-            session.transaction.commit()
+    fun update(book: Book) {
+        try {
+            sessionFactory.openSession().use { session ->
+                session.beginTransaction()
+                session.update(book)
+                session.transaction.commit()
+            }
+        } catch (e: HibernateException) {
+            println("Ошибка обновления")
+        }
+    }
+
+    fun remove(book: Book) {
+        try {
+            sessionFactory.openSession().use { session ->
+                session.beginTransaction()
+                session.delete(book)
+                session.transaction.commit()
+            }
+        } catch (e: HibernateException) {
+            println("Ошибка удаления")
         }
     }
 
@@ -19,6 +47,17 @@ class BookDAO (private val sessionFactory: SessionFactory) {
         sessionFactory.openSession().use { session ->
             session.beginTransaction()
             result = session.get(Book::class.java, id)
+            session.transaction.commit()
+        }
+        return result
+    }
+
+    fun findAll(): List<Book> {
+
+        val result: List<Book>
+        sessionFactory.openSession().use { session ->
+            session.beginTransaction()
+            result = session.createQuery("from Book").list() as List<Book>
             session.transaction.commit()
         }
         return result

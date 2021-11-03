@@ -1,12 +1,13 @@
-package domain
+package entity
 
+import java.io.Serializable
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
-abstract class BaseEntity<T> {
+abstract class BaseEntity<T: Serializable> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,8 +18,6 @@ abstract class BaseEntity<T> {
         other ?: return false
 
         if (this === other) return true
-
-        if (other.javaClass != BaseEntity::class.java) return  false
 
         other as BaseEntity<*>
 
