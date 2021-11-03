@@ -7,6 +7,8 @@ import javax.persistence.*
 class Author(
     var firstName: String,
     var lastName: String,
-    @ManyToMany(mappedBy = "authors", cascade = [CascadeType.ALL])
+
+    @ManyToMany(mappedBy = "authors")
     var books: MutableList<Book> = mutableListOf()
+
 ): BaseEntity<Long>()

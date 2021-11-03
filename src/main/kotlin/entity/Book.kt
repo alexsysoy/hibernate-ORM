@@ -5,18 +5,18 @@ import javax.persistence.*
 @Entity
 @Table(name = "book")
 class Book (
-            var title: String,
-            var numberOfPage: Int = 0,
-            var cost: Int = -1,
+    var title: String,
+    var numberOfPage: Int = 0,
+    var cost: Int = -1,
 
-            @OneToOne(
-                fetch = FetchType.LAZY,
-                cascade = [CascadeType.ALL],
-            )
-            var genre: Genre? = null,
+    @ManyToOne(
+        cascade = [CascadeType.PERSIST, CascadeType.MERGE],
+        fetch = FetchType.LAZY
+    )
+    var publisher: Publisher? = null,
 
-            @ManyToMany(
-                cascade = [CascadeType.ALL],
+    @ManyToMany(
+                cascade = [CascadeType.PERSIST, CascadeType.MERGE],
                 fetch = FetchType.LAZY
             )
             @JoinTable(name = "book_author",
@@ -24,4 +24,15 @@ class Book (
                 inverseJoinColumns = [JoinColumn(name = "author_id")]
             )
             var authors: MutableList<Author> = mutableListOf()
-): BaseEntity<Long>()
+): BaseEntity<Long>() {
+
+    fun addAuthor(author: Author) {
+        authors.add(author)
+        author.books.add(this)
+    }
+
+    fun addPublisher(publisher: Publisher) {
+        this.publisher = publisher
+        publisher.books.add(this)
+    }
+}

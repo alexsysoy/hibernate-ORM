@@ -10,7 +10,7 @@ class BookDAO (private val sessionFactory: SessionFactory) {
         try {
             sessionFactory.openSession().use { session ->
                 session.beginTransaction()
-                session.save(book)
+                session.persist(book)
                 session.transaction.commit()
             }
         } catch (e: HibernateException) {
@@ -34,7 +34,7 @@ class BookDAO (private val sessionFactory: SessionFactory) {
         try {
             sessionFactory.openSession().use { session ->
                 session.beginTransaction()
-                session.delete(book)
+                session.remove(book)
                 session.transaction.commit()
             }
         } catch (e: HibernateException) {
